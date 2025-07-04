@@ -12,3 +12,4 @@ try {
 } catch (error) {
     console.log(`Não foi possivel conectar ao banco: ${error}`)  
 }
+module.exports = sequelize
