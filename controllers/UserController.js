@@ -160,12 +160,30 @@ module.exports = class UserController {
         const token = getToken(req)
         const user = await getUserByToken(token)
 
+     
+        //validation if is user exisits
+        const userExists = await User.findOne({where: {id: id}})
+        if(!userExists){
+            res.status(404).json({ message: 'Usuário não encontrado!' })
+            return
+        }
+        if(user.id.toString() !== id.toString()){
+            return res.status(403).json({message: "Você não tem permissão para editar este usuário"})
+        }
+
+        //validation id 
+        if (req.params.id !== user.id.toString()) {
+            return res.status(403).json({ message: "Acesso negado!" });
+        }
+
         const {name, password, confirmpassword} = req.body
+        
+
         //multer working in images
-       
         if(req.file){
             user.image = req.file.filename
         }
+
         //validations
         if(!name){
             res.status(422).json({message: "o nome é obrigatorio"})
