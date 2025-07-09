@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const User = require('../model/User')
+const User = require('../models/User')
 
 const createUserToken = async(user, req,res) =>{
     //create token amd valid id

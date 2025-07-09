@@ -33,13 +33,12 @@ const User = db.define('User', {
         defaultValue: 'user'
     },
     image:{
-        type: String,
+        type: DataTypes.STRING,
         allowNull: true,
     }
 })
 
-User.associate = (models) =>{
-    User.hasMany(models.Reservations)
-}
+
+
 
 module.exports = User

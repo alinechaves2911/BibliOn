@@ -1,5 +1,5 @@
 //imports & bd
-const User = require('../model/User')
+const User = require('../models/User')
 
 //middlewares
 const  getUserByToken = require('../helpers/get-user-by-token')
