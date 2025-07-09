@@ -138,7 +138,59 @@ module.exports = class UserController {
             currentUser = null
         }
 
-        res.status(200).send(currentUser)
+        res.status(200).send(currentUser);
 
+    }
+    // UPDATE USERS
+    static async getUserById(req,res){
+        const id = req.params.id;
+        const user = await User.findByPk(id, {
+            //excluding sensitive data from the query
+            attributes: {exclude: ['password', 'resetToken', 'resetExpiresToken', 'role']}
+        });
+        //verify if id is valid
+        if(!user){
+            res.status(422).json({message: "Usuário não encontrado!"});
+        }
+
+        res.status(200).json({user})
+    }
+    static async editUser(req,res){
+        const id = req.params.id
+        const token = getToken(req)
+        const user = await getUserByToken(token)
+
+        const {name, password, confirmpassword} = req.body
+        //multer working in images
+       
+        if(req.file){
+            user.image = req.file.filename
+        }
+        //validations
+        if(!name){
+            res.status(422).json({message: "o nome é obrigatorio"})
+            return
+        }
+        if(password != confirmpassword){
+            res.status(422).json({message: " As senhas não conferem, Por favor tente novamente!"})
+            return
+        }else if(password == confirmpassword && password != null){
+            const passwordHash = await bcrypt.hash(password, 10);
+            user.password = passwordHash
+        }
+
+        console.log(user)
+
+        try {
+            await User.update({
+                name: name,  
+                password:user.password,
+                image: user.image,
+
+            }, {where: {id: user.id}})
+            res.status(200).json({message: "usuário cadastrado"})
+        } catch (error) {
+            res.status(500).json({message: error})
+        }
     }
 }
