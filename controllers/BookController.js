@@ -60,7 +60,8 @@ module.exports = class  BooksController {
             const newBook = await Book.create(book)
             res.status(201).json({message: "Livro cadastrado com sucesso",newBook})
         }catch(error){
-            res.status(500).json({message: error})
+            res.status(500).json({message: error}) 
+            console.log(error)
         }
     }
 }
